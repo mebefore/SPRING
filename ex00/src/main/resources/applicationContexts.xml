@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--contexts에 등록될 bean이 뭔지 알려줌  -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!--class경로가 뭐냐에 따라 실행되는 게 다르다-->
+	<bean id="tv" class="com.yedam.app.LGTV"/>
+
+</beans>
