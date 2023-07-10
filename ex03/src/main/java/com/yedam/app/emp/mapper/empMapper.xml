@@ -101,7 +101,7 @@
   	<update id="updateEmpInfo" parameterType="EmpVO">
   		UPDATE EMPLOYEES
   		<set>
-  		<!-- if test영역은 java영역이므로 #{} 안쓴다 -->
+  		<!-- if test영역은 java영역이므로 #{} 안쓴다 -->5
   			<if test="firstName != null and !firstName.equals('')">
   			first_name = ${firstName},
   			</if>
