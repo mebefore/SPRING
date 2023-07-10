@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.yedam.app.emp.mapper.EmpMapper">
+  	<!-- 전체조회  -->
+  	<select id="selectEmpAllList" resultType="EmpVO"> <!-- resultType 필수 -->
+  		SELECT EMPLOYEE_ID,
+  				FIRST_NAME
+  				LAST_NAME,
+  				EMAIL,
+  				PHONE_NUMBER,
+  				HIRE_DATE,
+  				JOB_ID,
+  				SALARY,
+  				COMMISSION_PCT,
+  				MANAGER_ID,
+  				DEPARTMENT_ID
+  		FROM EMPLOYEES
+  		ORDER BY EMPLOYEE_ID
+  	</select>
+  	
+  	<!-- 단건조회 -->
+  	<select id="selectEmpInfo" resultType="EmpVO">
+  		SELECT EMPLOYEE_ID,
+  				FIRST_NAME
+  				LAST_NAME,
+  				EMAIL,
+  				PHONE_NUMBER,
+  				HIRE_DATE,
+  				JOB_ID,
+  				SALARY,
+  				COMMISSION_PCT,
+  				MANAGER_ID,
+  				DEPARTMENT_ID
+  		FROM EMPLOYEES
+  		WHERE EMPLOYEE_ID = #{employeeId}
+  		<!-- #{ }   : PreparedStatement  0 -> 0, Kang -> 'Kang' 
+  			 ${ } 	: Statement			 0 -> 0, Kang -> Kang  -->
+  			 
+  	</select>
+  	<!-- 등록 -->
+  	<!-- 결과는 파라미터타입에 담긴다.
+  		키프로퍼티는 EmpVO안에 담긴 값들을 결정 -->
+  	<insert id="" parameterType="EmpVO">
+  		<selectKey keyProperty="employeeId" resultType="int" order="BEFORE">
+  		<!--결과값의 타입이 selectKey의 resulType과 일치해야함.  -->
+  		<!-- 가져야하는 emp_id 자동 생성 -->
+  			SELECT NVL(MAX(EMPLOYEE_ID),0)+1
+  			FROM EMPLOYEES
+  		</selectKey>
+  		INSERT INTO EMPLOYEES
+  					(EMPLOYEE_ID
+  					,FIRST_NAME
+  					,LAST_NAME
+  					,EMAIL
+  					,HIRE_DATE
+  					,JOB_ID
+  					,SALARY
+  					)
+  					VALUES
+  					(
+  						#{employeeId}
+  						,#{firstName}
+  						,#{lastName}
+  						,#{email}
+  						<!-- 
+  						<if test="hireDate != null">
+  						,#{hireDate}
+  						</if>
+  						<if test="hireDate == null">
+  						,sysdate
+  						</if>
+  						-->
+	  					<choose>
+	  						<when test="hireDate != null">
+	  							,#{hireDate}
+	  						</when>
+	  						<otherwise>
+	  							,sysdate
+	  						</otherwise>
+	  					</choose>
+	  					<!--choose는 나열된 것 중 하나만 출력된다 (보장됨)  -->
+  						,#{jobId}
+  						,#{salary}
+  						
+  					)
+  	</insert>
+  	
+  	<!-- 수정 : 사원의 급여를 정해진 비율로 인상 -->
+  	<update id="updateEmpSal">
+  		UPDATE EMPLOYEES
+  		<!-- 이름은 @Param 기준으로 갖고오기 -->
+  		SET SALARY = SALARY * (1 + #{RAISE} /100)
+  		WHERE EMPLOYEE_ID = #{emp.employeeId}
+  	</update>
+  	
+  	<!-- 수정 : 사원 정보 수정 -->
+  	<!-- 1) 모든 항목에 업데이트 진행, 전제조건 : 모든 항목에 정보가 존재 -->
+  	<!-- 2) Mybatis에서는 Dynamic SQL 사용 -->
+  	<update id="updateEmpInfo" parameterType="EmpVO">
+  		UPDATE EMPLOYEES
+  		<set>
+  		<!-- if test영역은 java영역이므로 #{} 안쓴다 -->
+  			<if test="firstName != null and !firstName.equals('')">
+  			first_name = ${firstName},
+  			</if>
+  			<if test="email != null and !email.equals('')">
+  			email = #{email},
+  			</if>
+  			<!-- int는 null이 존재 x 그래서 not null 못 쓴다  -->
+  			<if test="salary > 0">
+  			salary = #{salary},
+  			</if>  			
+  		</set>
+  		WHERE EMPLOYEE_ID = #{employeeId}
+  	</update>
+  	
+  	<!-- 삭제 -->
+  	<delete id="deleteEmpInfo" parameterType="int">
+  		DELETE FROM EMPLOYEES
+  		WHERE EMPLOYEE_ID = #{empId}
+  	</delete>
+  </mapper>

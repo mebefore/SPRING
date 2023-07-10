@@ -54,7 +54,7 @@
 	
 	<logger name="jdbc.resultset">
 	<level value="warn" />
-	</logger
+	</logger>
 	
 	<!-- Root Logger -->
 	<root>
