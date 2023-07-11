@@ -19,7 +19,7 @@ public interface EmpMapper {
 	
 	//수정 - 급여를 정해진 비율로 인상
 	//두개 이상 매개변수 쓸때 @Param(xml에서 쓸 이름 정하기) - mapper에서만 사용
-	public int updateEmpSal(@Param("empId") EmpVO empVO, @Param("raise") int raise);
+	public int updateEmpSal(@Param("emp") EmpVO empVO, @Param("raise") int raise);
 	
 	//수정 - 사원정보를 수정
 	public int updateEmpInfo(EmpVO empVO);

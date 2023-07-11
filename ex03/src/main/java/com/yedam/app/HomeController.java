@@ -32,6 +32,7 @@ public class HomeController {
 		String formattedDate = dateFormat.format(date);
 		
 		model.addAttribute("serverTime", formattedDate );
+		//위의 연산결과를 담아서 보내주겠다.
 		
 		return "home";
 	}

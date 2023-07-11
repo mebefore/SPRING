@@ -6,7 +6,7 @@
   	<!-- 전체조회  -->
   	<select id="selectEmpAllList" resultType="EmpVO"> <!-- resultType 필수 -->
   		SELECT EMPLOYEE_ID,
-  				FIRST_NAME
+  				FIRST_NAME,
   				LAST_NAME,
   				EMAIL,
   				PHONE_NUMBER,
@@ -17,7 +17,7 @@
   				MANAGER_ID,
   				DEPARTMENT_ID
   		FROM EMPLOYEES
-  		ORDER BY EMPLOYEE_ID
+  		ORDER BY EMPLOYEE_ID DESC
   	</select>
   	
   	<!-- 단건조회 -->
@@ -42,7 +42,7 @@
   	<!-- 등록 -->
   	<!-- 결과는 파라미터타입에 담긴다.
   		키프로퍼티는 EmpVO안에 담긴 값들을 결정 -->
-  	<insert id="" parameterType="EmpVO">
+  	<insert id="insertEmpInfo" parameterType="EmpVO">
   		<selectKey keyProperty="employeeId" resultType="int" order="BEFORE">
   		<!--결과값의 타입이 selectKey의 resulType과 일치해야함.  -->
   		<!-- 가져야하는 emp_id 자동 생성 -->
@@ -91,7 +91,7 @@
   	<update id="updateEmpSal">
   		UPDATE EMPLOYEES
   		<!-- 이름은 @Param 기준으로 갖고오기 -->
-  		SET SALARY = SALARY * (1 + #{RAISE} /100)
+  		SET SALARY = SALARY * (1 + #{raise} /100)
   		WHERE EMPLOYEE_ID = #{emp.employeeId}
   	</update>
   	
@@ -101,7 +101,7 @@
   	<update id="updateEmpInfo" parameterType="EmpVO">
   		UPDATE EMPLOYEES
   		<set>
-  		<!-- if test영역은 java영역이므로 #{} 안쓴다 -->5
+  		<!-- if test영역은 java영역이므로 #{} 안쓴다 -->
   			<if test="firstName != null and !firstName.equals('')">
   			first_name = ${firstName},
   			</if>
