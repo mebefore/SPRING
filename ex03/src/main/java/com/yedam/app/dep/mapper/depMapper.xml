@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.yedam.app.dep.mapper.DepMapper">
+  <!-- 전체조회  -->
+  <!--select는 parameterType 생략 가능  -->
+  <select id="selectDepAllList" resultType="DepVO"> 
+  	SELECT MANAGER_ID,
+  		   LOCATION_ID,
+  		   DEPARTMENT_NAME,
+  		   DEPARTMENT_ID
+  	FROM DEPARTMENTS
+  	ORDER BY DEPARTMENT_ID DESC
+  
+  </select>
+  
+  <!-- 단건조회 -->
+  <select id="selectDepInfo" resultType="DepVO">
+  	SELECT MANAGER_ID,
+  			LOCATION_ID,
+  			DEPARTMENT_NAME,
+  			DEPARTMENT_ID
+  	FROM DEPARTMENTS
+  	WHERE DEPARTMENT_ID =#{departmentId}
+  </select>
+  
+  <!-- 등록 -->
+  <insert id="insertDepInfo" parameterType="DepVO">
+  	<selectKey keyProperty="departmentId" resultType="int" order="BEFORE">
+  		SELECT NVL(MAX(DEPARTMENT_ID),0)+10
+  		FROM DEPARTMENTS
+  	
+  	</selectKey>
+  		INSERT INTO DEPARTMENTS
+  					(
+  					MANAGER_ID
+  					,LOCATION_ID
+  					,DEPARTMENT_NAME
+  					,DEPARTMENT_ID
+  					)
+  					VALUES
+  					(
+  						#{managerId}
+  						,#{locationId}
+  						,#{departmentName}
+  						,#{departmentId}
+  					)
+  </insert>
+  
+  
+  	<!-- 수정 : 부서 번호 수정 -->
+  	<update id="updateDepId">
+  		UPDATE DEPARTMENTS
+  		SET DEPARTMENT_ID = DEPARTMENT_ID * (10 + #{raise} /100)
+  		WHERE DEPARTMENT_ID = #{dep.departmentId}
+  	</update>
+  	
+  <!-- 수정  -->
+  <update id="updateDepInfo" parameterType="DepVO">
+  	UPDATE DEPARTMENTS
+  	<set>
+  		<if test="managerId != null and managerId > 0">
+  			manager_id = #{managerId},
+  		</if>
+  		<if test="locationId != null and locationId > 0">
+  			location_id = ${locationId}, 
+  		</if>
+  		<if test="departmentName != null and !departmentName.equals('')">
+  			department_name = #{departmentName}
+  		</if>
+  	</set>
+  	WHERE DEPARTMENT_ID = #{departmentId}
+  </update>
+  
+  <!-- 삭제 -->
+  <delete id="deleteDepInfo" parameterType="int">
+  	DELETE FROM DEPARTMENTS
+  	WHERE DEPARTMENT_ID = #{depId}
+  </delete>
+  </mapper>

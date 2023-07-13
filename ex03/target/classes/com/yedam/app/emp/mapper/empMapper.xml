@@ -103,7 +103,7 @@
   		<set>
   		<!-- if test영역은 java영역이므로 #{} 안쓴다 -->
   			<if test="firstName != null and !firstName.equals('')">
-  			first_name = ${firstName},
+  			first_name = #{firstName},
   			</if>
   			<if test="email != null and !email.equals('')">
   			email = #{email},

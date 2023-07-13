@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -25,7 +26,7 @@ public class EmpController {
 	
 	//전체조회
 	@GetMapping("/empList")
-	public String getEmpAllList(Model model) {
+	public String getEmpAllList(Model model) { //model data담아서 줄 때
 		model.addAttribute("empList", empService.getEmpAll()); //key 값 : empList
 		return "emp/empList"; //this is just 경로
 		// '/WEB-INF/views/emp/empList.jsp'
@@ -41,7 +42,7 @@ public class EmpController {
 	
 	//등록 - Form
 	@GetMapping("/empInsert")
-	public String empInsertForm() {
+	public String empInsertForm() { //받을 것, 줄 것 없어서 매개변수 x
 		return "emp/empInsert"; //단순 페이지만 요청
 	}
 	
@@ -61,13 +62,21 @@ public class EmpController {
 		return "redirect:empList";
 	}
 	
-	//수정 - Process
+	//수정 - Process, form x
 	//1) Client이 보낼 때 JSON으로 보냄  -> Server로 : @RequestBody
 	//2) Server도 보낼 때 JSON으로 보냄 -> Client한테 : @ResponseBody
 	@PostMapping("/empUpdate")
 	@ResponseBody
 	public Map<String, String> empUpdateProcess(@RequestBody EmpVO empVO){
 		return empService.updateEmp(empVO);
+	}
+	
+	//삭제 - Process
+	@PostMapping("/empDelete")
+	@ResponseBody
+	public String empDeleteProcess(@RequestParam(name = "id") int employeeId) {
+		Map<String, String> map = empService.deleteEmp((employeeId));
+		return map.get("결과");
 	}
 	
 }

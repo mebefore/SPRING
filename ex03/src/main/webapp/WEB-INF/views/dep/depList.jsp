@@ -15,34 +15,24 @@
 </style>
 </head>
 <body>
-	<button type="button" onclick="location.href='empInsert'">등록</button>
+	<button type="button" onclick="location.href='depInsert'">등록</button>
 	<table>
 		<thead>
 			<tr>
-				<th>employee_id</th>
-				<th>first_name</th>
-				<th>last_name</th>
-				<th>email</th>
-				<th>hire_date</th>
-				<th>job_id</th>	
-				<th>salary</th>	
+				<th>manager_id</th>
+				<th>location_id</th>
+				<th>department_name</th>
+				<th>department_id</th>
 				<th>Delete</th>	
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach items="${empList }" var="emp">
-				<tr onclick="location.href='empInfo?employeeId=${emp.employeeId}'"> 
-					<td>${emp.employeeId }</td>
-					<td>${emp.firstName }</td>
-					<td>${emp.lastName }</td>
-					<td>${emp.email }</td>
-					<td>
-					<fmt:formatDate value="${emp.hireDate }" pattern="yyyy년MM월dd일"/>
-					</td>
-					<td>${emp.jobId }</td>
-					<td>
-						<fmt:formatNumber value="${emp.salary }" pattern="$#,###"/>
-					</td>
+			<c:forEach items="${depList }" var="dep">
+				<tr onclick="location.href='depInfo?departmentId=${dep.departmentId}'">
+					<td>${dep.departmentId }</td> 
+					<td>${dep.managerId }</td>
+					<td>${dep.locationId }</td>
+					<td>${dep.departmentName }</td>
 					<td><button type = "button">삭제</button></td>
 				</tr>
 			</c:forEach>
@@ -50,22 +40,22 @@
 	</table>
 	
 	<script>
-		printMessage(`${result}`);
+		printMessage(`${result}`); //redirect attrinute로 넘어오는 값 = result
 	
 		function printMessage(msg){
 			if(msg == null || msg == '') return;
 			alert(msg);
 		}
 		
-		$('button:contains("삭제")').on('click', ajaxDeleteEmp);
+		$('button:contains("삭제")').on('click', ajaxDeleteDep);
 		
-		function ajaxDeleteEmp(e){
-			let empId = e.currentTarget.closest('tr').FirstElementChild.textContent;
+		function ajaxDeleteDep(e){
+			let depId = e.currentTarget.closest('tr').firstElementChild.textContent;
 			
 			$.ajax({
-				url : 'empDelete',
+				url : 'depDelete',
 				type : 'post',
-				data : { id : empId}
+				data : { id : depId}
 			})
 			
 			.done( data =>{
