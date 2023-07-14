@@ -66,7 +66,7 @@
 		})
 		.fail(reject =>console.log(reject));
 	};
-		
+
 	</script>
 </body>
 </html>

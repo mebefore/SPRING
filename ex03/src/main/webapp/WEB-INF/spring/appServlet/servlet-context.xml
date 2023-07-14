@@ -14,16 +14,35 @@
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
 	<resources mapping="/resources/**" location="/resources/" /><!--  resources: 정적파일 매핑 -->
+	
 	<!--  location="/resources/": 물리적 위치. / 슬러시 있어야 하위 폴더까지 맵핑됨 -->
 	<!-- <resources mapping="/files/**" location="/files/" /> --> <!--  files 도 가능 -->
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	<!--  InternalResourceViewResolver는 컨트롤러가 지정한 뷰 이름으로부터 실제로 사용될 뷰를 선택 -->
+	
 		<beans:property name="prefix" value="/WEB-INF/views/" />
 		<beans:property name="suffix" value=".jsp" />
+		<beans:property name="order" value="2"/> <!--  tiles 동작안하면 이게 두번째 동작한다. -->
 	</beans:bean><!--  Resource 돌렸는데 결과없으면 404에러 뜸 -->
 	
-	<context:component-scan base-package="com.yedam.app" /><!-- 없으면동작안함 -->
 	
-	
-	
+
+	 <beans:bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+	   <beans:property name="definitions">
+	     <beans:list>
+	       <beans:value>/WEB-INF/tiles.xml</beans:value>
+	     </beans:list>
+	   </beans:property>
+ 	</beans:bean>
+ 
+ <!-- tilesViewResolver 동작 우선순위를 줌  -->
+	 <beans:bean id="tilesViewResolver" 
+	 	class="org.springframework.web.servlet.view.tiles3.TilesViewResolver">
+	 	<beans:property name="order" value="1"/> <!--  우선순위 1 이게 응답을 못하게되면 tiles 적용 안되게 되는 것임 -->
+	 </beans:bean>
+	 
+ 	<context:component-scan base-package="com.yedam.app" /><!-- 없으면 동작 안 함 -->
+ 
 </beans:beans>
