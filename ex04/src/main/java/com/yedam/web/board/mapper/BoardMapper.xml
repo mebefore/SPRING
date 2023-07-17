@@ -11,7 +11,7 @@
   		   CONTENTS,
   		   WRITER,
   		   REGDATE,
-  		   UPPDATEDATE,
+  		   UPDATEDATE,
   		   IMAGE
   	FROM BOARD
   	ORDER BY BNO DESC
@@ -33,6 +33,7 @@
   <!-- 등록 -->
   <insert id="insertBoardInfo" parameterType="BoardVO">
   	<!-- 게시물 번호 자동 생성 : selectKey  -->
+  	<!-- MAX : 가장 마지막 값 반환 (유니크한 값) -->
   	<selectKey keyProperty="bno" resultType="int" order="BEFORE">
   		SELECT NVL(MAX(BNO),100)+1
   		FROM BOARD
@@ -42,7 +43,7 @@
   					(
 	  					BNO
 			  		   ,TITLE
-			  		   <if test="contents != null !contents.equals('')">
+			  		   <if test="contents != null and !contents.equals('')">
 			  		   ,CONTENTS
 			  		   </if>
 			  		   ,WRITER
@@ -57,7 +58,7 @@
   					(
 					#{bno}
 					,#{title}
-					<if test="contents != null !contents.equals('')">
+					<if test="contents != null and !contents.equals('')">
 			  		   ,#{contents}
 			  		   </if>
 					,#{writer}
@@ -75,15 +76,24 @@
   	UPDATE BOARD
   	<set>
   		<if test="title != null and !title.equals('')">
-  			TITLE = #{title}
+  			TITLE = #{title},
   		</if>
-  		<if test="contents != null and !contents.equals('')">
+  		<!--글 내용 삭제하고싶을 수도 있는데 equals('') 하면 내용 못 없애니까
+  			null만 체크한다  -->
+  		<if test="contents != null">
   			CONTENTS = #{contents},
   		</if>
-  		<if test="image != null and !image.equals('')">
+  		<if test="image != null">
   			IMAGE = #{image},
   		</if>
-  			UPDATEDATE =#{updatedate}
+  		<choose>
+  			<when test="updatedate != null">
+  				UPDATEDATE =#{updatedate}
+  			</when>
+  			<otherwise>
+  				updatedate = sysdate
+  			</otherwise>
+  		</choose>
   	</set>
   	WHERE BNO = #{bno}
   </update>
