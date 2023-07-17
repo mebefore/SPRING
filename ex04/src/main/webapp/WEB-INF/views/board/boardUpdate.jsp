@@ -54,7 +54,12 @@
 				data : objData
 			})
 			.done(data => { 
-				console.log(data);
+				if(data.result){
+					let message = '수정되었습니다.\n사원번호 : ' + data.boardInfo.bno;
+					alert(message);
+				}else{
+					alert('수정되지 않았습니다.\n정보를 확인해주세요.')
+				}
 			})
 			.fail(reject => console.log(reject));
 			
