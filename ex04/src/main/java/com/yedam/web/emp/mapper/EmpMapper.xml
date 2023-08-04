@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.yedam.web.emp.mapper.EmpMapper">
+  <!-- 총 데이터 조회 -->
+  	<select id="getTotalCount" resultType="int"> <!--id는 mapper.java의 필드값 가져옴  -->
+  		SELECT COUNT(*)
+  		FROM EMPLOYEES
+  	</select>
+  	
+  	<!-- 전체조회  -->
+  	<!--페이징은 ORDER BY 필수
+  	페이징 제대로 하려면 서브쿼리 2개 드간다 -->
+  	<select id="selectEmpAll" resultType="EmpVO">
+  		SELECT *
+		FROM (SELECT ROWNUM RN, A.*
+				FROM (SELECT *
+					FROM EMPLOYEES
+					ORDER BY EMPLOYEE_ID) A)
+		WHERE RN BETWEEN #{start} AND #{end}
+  	</select>
+  	<!--//RN은 START와 END를 기준으로 동작 시키기에 BETWEEN 이 된다
+		//검색 기능 구현할 때는 안쪽 조건에 검색 조건을 걸어야한다  -->
+  </mapper>
